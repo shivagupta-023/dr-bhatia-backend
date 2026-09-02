@@ -186,9 +186,11 @@ app.post('/api/appointments/book', async (req, res) => {
       `
     };
 
-    // Send emails asynchronously
-    transporter.sendMail(doctorMailOptions);
-    transporter.sendMail(patientMailOptions);
+    /// Vercel par 'await' lagana bohot zaroori hai taaki process beech me kill na ho
+    await Promise.all([
+      transporter.sendMail(doctorMailOptions),
+      transporter.sendMail(patientMailOptions)
+    ]);
 
     res.status(200).json({ success: true, message: "Appointment booked successfully!" });
 
